@@ -1,14 +1,14 @@
 *.pyc
 .idea
 __pycache__/*
-pywallet/__pycache__/*
+hdwallet/__pycache__/*
 dist
 /build
 /docs/build/doctrees/*
 /docs/build/html/*
 /docs/build/epub/*
 !/docs/build/epub/*.epub
-pywallet.egg-info
-pywallet.egg-info
+hdwallet.egg-info
+hdwallet.egg-info
 Icon
 /notes.txt
