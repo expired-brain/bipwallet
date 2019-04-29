@@ -1,5 +1,5 @@
 
-HdWallet
+bipwallet
 
 ===========
 
@@ -32,7 +32,7 @@ Install via PiP:
 
 .. code:: bash
 
-   $ sudo pip install hdwallet
+   $ sudo pip install bipwallet
 
 
 Example code:
@@ -47,7 +47,7 @@ The following code creates a new Bitcoin HD wallet:
 
     # create_btc_wallet.py
 
-    from hdwallet import wallet
+    from bipwallet import wallet
 
     # generate 12 word mnemonic seed
     seed = wallet.generate_mnemonic()
@@ -98,7 +98,7 @@ Similarly, you can do the same for an Ethereum wallet:
 
     # create_eth_wallet.py
 
-    from hdwallet import wallet
+    from bipwallet import wallet
 
     seed = wallet.generate_mnemonic()
     w = wallet.create_wallet(network="ETH", seed=seed, children=1)
@@ -148,7 +148,7 @@ Example:
 
     # create_child_wallet.py
 
-    from hdwallet import wallet
+    from bipwallet import wallet
 
     WALLET_PUBKEY = 'YOUR WALLET XPUB'
 

@@ -11,7 +11,7 @@ with open(path.join('README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 def load_version():
-    version_file = "hdwallet/_version.py"
+    version_file = "bipwallet/_version.py"
     version_line = open(version_file).read().rstrip()
     vre = re.compile(r'__version__ = "([^"]+)"')
     matches = vre.findall(version_line)
@@ -26,11 +26,11 @@ def load_version():
 version = load_version()
 
 setup(
-    name='hdwallet',
+    name='bipwallet',
     version=version,
     description="Simple BIP32 (HD) wallet creation for BTC, BTG, BCH, LTC, DASH, USDT, QTUM and DOGE",
     long_description=long_description,
-    url='https://github.com/iPhonePKAndroid/hdwallet',
+    url='https://github.com/iPhonePKAndroid/bipwallet',
     author='iPhonePKAndroid',
     author_email='ilidangao@gmail.com',
     license='MIT License',
