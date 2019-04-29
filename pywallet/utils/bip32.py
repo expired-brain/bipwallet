@@ -497,6 +497,35 @@ class Wallet(object):
         # Return a base58 encoded address with a checksum
         return ensure_str(base58.b58encode_check(network_hash160_bytes))
 
+    def to_segwit_address(self):
+        """Create a public address from this Wallet.
+
+        Public addresses can accept payments.
+
+        https://en.bitcoin.it/wiki/Technical_background_of_Bitcoin_addresses
+        """
+        key = unhexlify(self.get_public_key_hex())
+        # First get the hash160 of the key
+        hash160_bytes = hash160(key)
+        # Prepend the network address byte
+
+        # if BIP32 - comment this out for testing
+        #network_hash160_bytes = \
+            #chr_py2(self.network.PUBKEY_ADDRESS) + hash160_bytes
+
+        
+        # if BIP49
+        script_sig = bytes.fromhex('0014') + hash160_bytes
+        address_bytes = hash160(script_sig)
+        network_hash160_bytes = \
+            chr_py2(self.network.SCRIPT_ADDRESS) + address_bytes
+        # print(self.network.PUBKEY_ADDRESS)
+
+        # Return a base58 encoded address with a checksum
+
+        return ensure_str(base58.b58encode_check(network_hash160_bytes))
+
+
     @classmethod #@memoize
     def deserialize(cls, key, network="bitcoin_testnet"):
         """Load the ExtendedBip32Key from a hex key.

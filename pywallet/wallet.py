@@ -55,8 +55,14 @@ def create_address(network='btctest', xpub=None, child=None, path=0):
         "path": "m/" + str(wallet_obj.child_number) + "/" +str(child_wallet.child_number),
         "bip32_path": net.BIP32_PATH + str(wallet_obj.child_number) + "/" +str(child_wallet.child_number),
         "address": child_wallet.to_address(),
-        # "xpublic_key": child_wallet.serialize_b58(private=False),
-        # "wif": child_wallet.export_to_wif() # needs private key
+        "segwit": child_wallet.to_segwit_address(),
+        "private_key": child_wallet.private_key.get_key().decode(),
+        "public_key": child_wallet.public_key.get_key().decode(),
+        "xpublic_key": child_wallet.serialize_b58(private=False),
+        "xprivate_key": child_wallet.serialize_b58(private=True),
+        "wif": str(child_wallet.export_to_wif(), encoding = "utf-8"), # needs private key
+        "xpublic_key_prime": child_wallet.serialize_b58(private=False),
+        "xprivate_key_prime": child_wallet.serialize_b58(private=True),
     }
 
 
@@ -142,6 +148,7 @@ def create_wallet(network='btctest', seed=None, children=1):
                 child=child, path=0
             )
             wallet["children"].append({
+                "seed": seed,
                 "address": child_wallet["address"],
                 "xpublic_key": child_wallet["xpublic_key"],
                 "path": "m/" + str(child),
@@ -158,19 +165,28 @@ def create_wallet(network='btctest', seed=None, children=1):
         wallet["xprivate_key"] = my_wallet.serialize_b58(private=True)
         wallet["xpublic_key"] = my_wallet.serialize_b58(private=False)
         wallet["address"] = my_wallet.to_address()
-        wallet["wif"] = my_wallet.export_to_wif()
+        wallet["segwit"] = my_wallet.to_segwit_address()
+        wallet["wif"] = str(my_wallet.export_to_wif(), encoding = "utf-8")
 
         prime_child_wallet = my_wallet.get_child(0, is_prime=True)
         wallet["xpublic_key_prime"] = prime_child_wallet.serialize_b58(private=False)
+        wallet["xprivate_key_prime"] = prime_child_wallet.serialize_b58(private=True)
 
         # prime children
         for child in range(children):
-            child_wallet = my_wallet.get_child(child, is_prime=False, as_private=False)
+            child_wallet = my_wallet.get_child(child, is_prime=False, as_private=True)
             wallet["children"].append({
+                "private_key": child_wallet.private_key.get_key().decode(),
+                "public_key": child_wallet.public_key.get_key().decode(),
                 "xpublic_key": child_wallet.serialize_b58(private=False),
+                "xprivate_key": child_wallet.serialize_b58(private=True),
                 "address": child_wallet.to_address(),
+                "segwit": child_wallet.to_segwit_address(),
+                "wif": str(child_wallet.export_to_wif(), encoding = "utf-8"),
                 "path": "m/" + str(child),
                 "bip32_path": net.BIP32_PATH + str(child_wallet.child_number),
+                "xpublic_key_prime": child_wallet.serialize_b58(private=False),
+                "xprivate_key_prime": child_wallet.serialize_b58(private=True),
             })
 
     return wallet
