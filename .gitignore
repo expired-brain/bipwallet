@@ -11,5 +11,6 @@ dist
 bipwallet.egg-info
 bipwallet.egg-info
 Icon
-/notes.txt
-/venv
+notes.txt
+venv
+bipwallet.egg-info
