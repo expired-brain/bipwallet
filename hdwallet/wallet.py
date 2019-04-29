@@ -40,8 +40,12 @@ def create_address(network='btctest', xpub=None, child=None, path=0):
             "address": keys[-1].address()
         }
 
-        if inspect.stack()[1][3] == "create_wallet":
-            res["xpublic_key"] = keys[-1].to_b58check()
+
+        # if inspect.stack()[1][3] == "create_wallet":
+        res["xpublic_key"] = str(keys[-1].to_b58check(), encoding = "utf-8")
+        res["xprivate_key"] = str(keys[-1].to_b58check(), encoding = "utf-8")
+        res["public_key"] = acct_pub_key.to_hex()
+        res["private_key"] = keys[-1].to_hex()
 
         return res
 
@@ -130,27 +134,31 @@ def create_wallet(network='btctest', seed=None, children=1):
         acct_priv_key = root_keys[-1]
         acct_pub_key = acct_priv_key.public_key
 
+        # print(master_key, root_keys[0].to_hex(), acct_priv_key, acct_pub_key)
+
         wallet["private_key"] = acct_priv_key.to_hex()
         wallet["public_key"] = acct_pub_key.to_hex()
-        wallet["xprivate_key"] = acct_priv_key.to_b58check()
-        wallet["xpublic_key"] = acct_pub_key.to_b58check()
+        wallet["xprivate_key"] = str(acct_priv_key.to_b58check(), encoding = "utf-8")
+        wallet["xpublic_key"] = str(acct_pub_key.to_b58check(), encoding = "utf-8")
 
         child_wallet = create_address(
             network=network.upper(), xpub=wallet["xpublic_key"],
             child=0, path=0)
         wallet["address"] = child_wallet["address"]
-        wallet["xpublic_key_prime"] = child_wallet["xpublic_key"]
 
         # get public info from first prime child
         for child in range(children):
+            # print(child_wallet)
             child_wallet = create_address(
                 network=network.upper(), xpub=wallet["xpublic_key"],
                 child=child, path=0
             )
             wallet["children"].append({
-                "seed": seed,
                 "address": child_wallet["address"],
+                "public_key": child_wallet["public_key"],
+                "private_key": child_wallet["private_key"],
                 "xpublic_key": child_wallet["xpublic_key"],
+                "xprivate_key": child_wallet["xprivate_key"],
                 "path": "m/" + str(child),
                 "bip32_path": "m/44'/60'/0'/" + str(child),
             })
