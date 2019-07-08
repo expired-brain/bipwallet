@@ -136,7 +136,8 @@ def create_wallet(network='btctest', seed=None, children=1):
 
         # print(master_key, root_keys[0].to_hex(), acct_priv_key, acct_pub_key)
 
-        wallet["private_key"] = acct_priv_key.to_hex()
+        # wallet["private_key"] = acct_priv_key.to_hex()
+        wallet["private_key"] = acct_priv_key._key.to_hex()
         wallet["public_key"] = acct_pub_key.to_hex()
         wallet["xprivate_key"] = str(acct_priv_key.to_b58check(), encoding = "utf-8")
         wallet["xpublic_key"] = str(acct_pub_key.to_b58check(), encoding = "utf-8")
@@ -144,7 +145,10 @@ def create_wallet(network='btctest', seed=None, children=1):
         child_wallet = create_address(
             network=network.upper(), xpub=wallet["xpublic_key"],
             child=0, path=0)
-        wallet["address"] = child_wallet["address"]
+        # 这个地址是私钥的
+        wallet["address"] = acct_priv_key.public_key.address()
+        # 这个地址是助记词的
+        wallet["seed_address"] = child_wallet["address"]
 
         # get public info from first prime child
         for child in range(children):
